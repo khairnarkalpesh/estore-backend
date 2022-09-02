@@ -122,7 +122,7 @@ exports.resetPassword = catchAsyncErrors( async (req, res, next) => {
     }
 
     if(req.body.password !== req.body.confirmPassword){
-        return next(new ErrorHandler("Password not matched"));
+        return next(new ErrorHandler("Password not matched", 404));
     }
 
     user.password = req.body.password;
@@ -133,4 +133,14 @@ exports.resetPassword = catchAsyncErrors( async (req, res, next) => {
     await user.save();
 
     sendToken(user, 200, res);
+})
+
+// Get user details
+exports.getUserDetails = catchAsyncErrors( async (req, res, next) => {
+    const user = await User.findById(req.user.id);
+
+    res.status(200).json({
+        success:true,
+        user
+    })
 })
